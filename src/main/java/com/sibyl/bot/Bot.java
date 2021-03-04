@@ -1,5 +1,6 @@
 package com.sibyl.bot;
 
+import com.sibyl.bot.command.CommandJudge;
 import com.sibyl.bot.command.CommandManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -34,13 +35,23 @@ public class Bot extends Thread {
             System.out.println("Attempting to Register Command Manager...");
             this.commandManager = new CommandManager(this.api);
             System.out.println("Registered Command Manager");
+
+            System.out.println("Registering Commands...");
+            this.registerCommands();
+            System.out.println("Registered Commands");
+
             System.out.println("Connecting to Discord...");
             this.connect();
             System.out.println("Connected");
+
             System.out.println("Sibyl System Ready | Ping: " + this.api.getGatewayPing() + " | Casting Judgement on: " + this.api.getUsers().size() + " users");
         } catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void registerCommands(){
+        this.commandManager.registerCommand(new CommandJudge(this.commandManager.getAccountManager()));
     }
 
     private void connect(){
