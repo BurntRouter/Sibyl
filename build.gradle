@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'com.burntrouter'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.11
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '4.2.0'
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '4.2.0', classifier: 'models'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.39'
+    compile group: 'org.json', name: 'json', version: '20180813'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    compile ('net.dv8tion:JDA:4.2.0_231') {
+        exclude module: 'opus-java'
+    }
+}
+
+task fullBuild(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'com.sibyl.bot.Launcher'
+    }
+
+    baseName = project.name + '-build'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
