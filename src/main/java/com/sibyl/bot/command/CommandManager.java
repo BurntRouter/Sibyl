@@ -33,6 +33,8 @@ public class CommandManager extends ListenerAdapter {
 
         MySQL database = new MySQL("com.mysql.jdbc.Driver", "jdbc:mysql://" + authenticator.getDatabaseHost() + "/" + authenticator.getDatabaseName() + "?autoReconnect=true&user=" + authenticator.getDatabaseUser() + "&password=" + authenticator.getDatabasePassword());
 
+        this.setAccountManager(new AccountManager(database));
+
         this.api = api;
     }
 
@@ -53,8 +55,8 @@ public class CommandManager extends ListenerAdapter {
                             command.onUse(query, fullQuery, this);
                         }
                     } else {
-                        Analyze analyze = new Analyze(event.getMessage());
-                        analyze.run(event.getMessage());
+                        Analyze analyze = new Analyze(event.getMessage(), accountManager);
+                        analyze.run(event.getMessage(), accountManager);
                         analyze.interrupt();
                     }
                 }
