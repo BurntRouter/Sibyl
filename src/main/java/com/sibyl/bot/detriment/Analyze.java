@@ -1,7 +1,6 @@
 package com.sibyl.bot.detriment;
 
 import com.sibyl.bot.database.AccountManager;
-import com.sibyl.bot.database.MySQL;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -15,13 +14,12 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class Analyze extends Thread {
-    private Message input;
-    private String userid;
-    private int score;
+    private final String userid;
+    private double score;
     private AccountManager accountManager;
 
     public Analyze(Message input, AccountManager accountManager) {
-    this.input = input;
+        this.userid = input.getAuthor().getId();
     this.start();
     this.accountManager = accountManager;
     }
@@ -37,7 +35,18 @@ public class Analyze extends Thread {
             score = RNNCoreAnnotations.getPredictedClass(tree);
         }
         System.out.println("Rating: " + score + " | Message: " + input.getContentStripped());
-        this.accountManager.updateJudgement(userid, score/10);
+        if(score == 0){
+            score = 0.2;
+        } if(score == 1){
+            score = 0.1;
+        } if(score == 2){
+            score = 0;
+        } if(score == 3){
+            score = -0.1;
+        } if(score == 4){
+            score = -0.2;
+        }
+        this.accountManager.updateJudgement(userid, score);
         this.interrupt();
     }
 }
