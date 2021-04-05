@@ -22,10 +22,20 @@ public class CommandJudge extends Command{
         System.out.println("Currently Judging " + query.getAuthor().getAsTag());
         userid = query.getAuthor().getId();
         score = accountManager.getJudgement(userid);
+        int hue = (int)score;
 
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setTitle("Sibyl's Judgement of " + query.getAuthor().getName());
+        switch(true) {
+            case (0 < hue && hue < 20):
+                embed.setColor(Color.white);
+                break;
+            case (20 < hue && hue < 49):
+                embed.setColor(Color.cyan);
+                break;
+                case(50 < hue && hue < )
+        }
         embed.setColor(Color.cyan);
         embed.setThumbnail(query.getAuthor().getEffectiveAvatarUrl());
         embed.addField("Detriment Coefficient: ", String.valueOf(score), true);

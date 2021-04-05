@@ -12,6 +12,10 @@ sourceCompatibility = 1.11
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
 }
 
 dependencies {
@@ -22,7 +26,7 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20210307'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
-    compile ('net.dv8tion:JDA:4.2.0_247') {
+    compile ('net.dv8tion:JDA:4.2.1_253') {
         exclude module: 'opus-java'
     }
 }

@@ -14,10 +14,23 @@ public abstract class Command {
 
     private boolean requiresWritePermission = true;
 
+    public String[] getIdentifiers() {
+        return identifiers;
+    }
+
     public Command(String[] identifiers, String[] arguments, String description){
         this.identifiers = identifiers;
         this.arguments = arguments;
         this.description = description;
+    }
+
+    public boolean identifierMatches(String identifier) {
+        for (String potentialMatchIdentifier : this.getIdentifiers()) {
+            if (potentialMatchIdentifier.equalsIgnoreCase(identifier)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public abstract void onUse(Message query, List<String> arguments, CommandManager commandManager) throws Exception;
