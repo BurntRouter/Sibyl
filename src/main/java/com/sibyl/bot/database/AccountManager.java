@@ -39,13 +39,15 @@ public class AccountManager {
         if(diff == 0) {
 
         } else {
-            System.out.println("Updating judgement for " + userid);
-            this.getJudgement(userid);
-            PreparedStatement setJudgement = this.mysql.getStatement("UPDATE users SET score = score + ? WHERE userid = ?");
-            setJudgement.setDouble(1, diff);
-            setJudgement.setString(2, userid);
-            setJudgement.executeUpdate();
-            setJudgement.close();
+            if(!this.isRigged(userid)){
+                System.out.println("Updating judgement for " + userid);
+                this.getJudgement(userid);
+                PreparedStatement setJudgement = this.mysql.getStatement("UPDATE users SET score = score + ? WHERE userid = ?");
+                setJudgement.setDouble(1, diff);
+                setJudgement.setString(2, userid);
+                setJudgement.executeUpdate();
+                setJudgement.close();
+            }
         }
     }
 

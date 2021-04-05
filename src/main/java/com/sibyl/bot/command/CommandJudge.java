@@ -26,17 +26,40 @@ public class CommandJudge extends Command{
 
 
         EmbedBuilder embed = new EmbedBuilder();
+        System.out.println("Hue color is " + hue);
         embed.setTitle("Sibyl's Judgement of " + query.getAuthor().getName());
-        switch(true) {
-            case (0 < hue && hue < 20):
-                embed.setColor(Color.white);
-                break;
-            case (20 < hue && hue < 49):
-                embed.setColor(Color.cyan);
-                break;
-                case(50 < hue && hue < )
+        if(hue == 0){
+            embed.setColor(new Color(254, 254, 254));
         }
-        embed.setColor(Color.cyan);
+        if ( 0 <= hue && hue < 20) {
+            embed.setColor(new Color(254, 254, 254));
+        } else if (20 <= hue && hue < 49) {
+            embed.setColor(new Color(0, 255, 255));
+        } else if (49 <= hue && hue < 79) {
+            embed.setColor(new Color(182, 255, 0));
+        } else if (79 <= hue && hue < 99) {
+            embed.setColor(new Color(0, 127, 14));
+        } else if (99 <= hue && hue < 149) {
+            embed.setColor(new Color(0, 74, 127));
+        } else if (149 <= hue && hue < 189) {
+            embed.setColor(new Color(91, 127, 0));
+        } else if (189 <= hue && hue < 229) {
+            embed.setColor(new Color(127, 106, 0));
+        } else if (229 <= hue && hue < 301) {
+            embed.setColor(new Color(200, 0, 0));
+        } else if (301 <= hue && hue < 400) {
+            embed.setColor(new Color(87, 0, 127));
+        } else if (400 <= hue && hue < 599) {
+            embed.setColor(new Color(127, 0, 100));
+        } else if (599 <= hue && hue < 699) {
+            embed.setColor(new Color(127, 0, 55));
+        } else if (699 <= hue && hue < 799) {
+            embed.setColor(new Color(127, 0, 0));
+        } else if (799 <= hue && hue < 899) {
+            embed.setColor(new Color(91, 36, 0));
+        } else if (899 <= hue) {
+            embed.setColor(new Color(0));
+        }
         embed.setThumbnail(query.getAuthor().getEffectiveAvatarUrl());
         embed.addField("Detriment Coefficient: ", String.valueOf(score), true);
         query.getTextChannel().sendMessage(embed.build()).queue();

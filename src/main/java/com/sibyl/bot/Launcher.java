@@ -1,9 +1,5 @@
 package com.sibyl.bot;
 
-import org.slf4j.impl.SimpleLogger;
-
-import javax.security.auth.login.LoginException;
-
 public class Launcher {
 
     public static void main(String[] args) {
