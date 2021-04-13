@@ -2,7 +2,6 @@ package com.sibyl.bot.command;
 
 import com.sibyl.bot.Authenticator;
 import com.sibyl.bot.database.AccountManager;
-import com.sibyl.bot.database.CassandraConnector;
 import com.sibyl.bot.database.MySQL;
 import com.sibyl.bot.detriment.Analyze;
 import net.dv8tion.jda.api.JDA;
@@ -31,8 +30,6 @@ public class CommandManager extends ListenerAdapter {
         Authenticator authenticator = new Authenticator();
 
         MySQL database = new MySQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://" + authenticator.getDatabaseHost() + "/" + authenticator.getDatabaseName() + "?autoReconnect=true&user=" + authenticator.getDatabaseUser() + "&password=" + authenticator.getDatabasePassword());
-
-        new CassandraConnector().connect(null, 0, null);
 
         this.setAccountManager(new AccountManager(database));
 

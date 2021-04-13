@@ -18,16 +18,31 @@ public class CommandJudge extends Command{
 
     @Override
     public void onUse(Message query, List<String> arguments, CommandManager commandManager) throws Exception {
+        try{
+            userid = arguments.get(1);
+            System.out.println("Judging: " + userid);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            userid = query.getAuthor().getId();
+        }
+        if(arguments.size() == 2){
+            try{
+                userid = arguments.get(1);
+                query.getGuild().getMemberById(userid);
+            } catch(Exception e){
+                query.getTextChannel().sendMessage("You've used this command incorrectly. Please specify either a userid to judge somebody else or nothing to judge yourself.").queue();
+            }
+
+        } else {
+            userid = query.getAuthor().getId();
+        }
         double score;
-        System.out.println("Currently Judging " + query.getAuthor().getAsTag());
-        userid = query.getAuthor().getId();
         score = accountManager.getJudgement(userid);
         int hue = (int)score;
 
 
         EmbedBuilder embed = new EmbedBuilder();
         System.out.println("Hue color is " + hue);
-        embed.setTitle("Sibyl's Judgement of " + query.getAuthor().getName());
+        embed.setTitle("Sibyl's Judgement of " + query.getGuild().getMemberById(userid).getUser().getName());
         if(hue == 0){
             embed.setColor(new Color(254, 254, 254));
         }
@@ -60,7 +75,7 @@ public class CommandJudge extends Command{
         } else if (899 <= hue) {
             embed.setColor(new Color(0));
         }
-        embed.setThumbnail(query.getAuthor().getEffectiveAvatarUrl());
+        embed.setThumbnail(query.getGuild().getMemberById(userid).getUser().getAvatarUrl());
         embed.addField("Detriment Coefficient: ", String.valueOf(score), true);
         query.getTextChannel().sendMessage(embed.build()).queue();
     }
