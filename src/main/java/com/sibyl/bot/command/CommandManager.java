@@ -56,8 +56,11 @@ public class CommandManager extends ListenerAdapter {
                             }
                         }
                     } else {
-                        Analyze analyze = new Analyze(event.getMessage(), accountManager);
-                        analyze.run(event.getMessage(), accountManager);
+                        if(!event.getMessage().getContentStripped().isEmpty()){
+                            Analyze analyze = new Analyze(event.getMessage(), accountManager);
+                            analyze.run(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
+                            this.accountManager.logMessage(event.getMessage());
+                        }
                     }
                 }
             }

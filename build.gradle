@@ -29,7 +29,6 @@ dependencies {
     compile ('net.dv8tion:JDA:4.2.1_254') {
         exclude module: 'opus-java'
     }
-    compile group: 'com.datastax.oss', name: 'java-driver-core', version: '4.11.0'
 }
 
 task fullBuild(type: Jar) {
