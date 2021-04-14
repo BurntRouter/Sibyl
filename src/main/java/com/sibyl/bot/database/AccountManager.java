@@ -1,8 +1,12 @@
 package com.sibyl.bot.database;
 
+import net.dv8tion.jda.api.entities.Message;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AccountManager {
     private MySQL mysql;
@@ -80,6 +84,31 @@ public class AccountManager {
             rigged = false;
         }
         return rigged;
+    }
+
+    public void logMessage(Message message) throws SQLException {
+        PreparedStatement logMess = this.mysql.getStatement("INSERT IGNORE INTO messages (guildid, channelid, userid, messageid, content) VALUES (?, ?, ?, ?, ?)");
+        logMess.setString(1, message.getGuild().getId());
+        logMess.setString(2, message.getTextChannel().getId());
+        logMess.setString(3, message.getAuthor().getId());
+        logMess.setString(4, message.getId());
+        logMess.setString(5, message.getContentStripped());
+        logMess.executeUpdate();
+        logMess.close();
+    }
+
+    public ArrayList<String> getMessages(String userid) throws SQLException {
+        ArrayList<String> messages = new ArrayList<>();
+
+        PreparedStatement getMess = this.mysql.getStatement("SELECT content FROM messages WHERE userid = ?");
+        getMess.setString(1, userid);
+        ResultSet resultSet = getMess.executeQuery();
+        while(resultSet.next()){
+            messages.add(resultSet.getString("content"));
+        }
+        resultSet.close();
+        getMess.close();
+        return messages;
     }
 
     public MySQL getMysql() {

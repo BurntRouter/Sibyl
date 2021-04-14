@@ -1,5 +1,7 @@
 package com.sibyl.bot;
 
+import com.sibyl.bot.command.CommandEvaluate;
+import com.sibyl.bot.command.CommandGet;
 import com.sibyl.bot.command.CommandJudge;
 import com.sibyl.bot.command.CommandManager;
 import net.dv8tion.jda.api.JDA;
@@ -26,7 +28,7 @@ public class Bot extends Thread {
 
     public void setup() throws LoginException, InterruptedException {
         System.out.println("Sibyl System is Warming Up");
-        this.api = JDABuilder.createDefault(token).setChunkingFilter(ChunkingFilter.ALL).setActivity(Activity.watching("you")).enableCache(CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES).setEnabledIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES).build().awaitReady();
+        this.api = JDABuilder.createDefault(token).setChunkingFilter(ChunkingFilter.ALL).setActivity(Activity.watching("you")).enableCache(CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES).setEnabledIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES).build().awaitReady();
     }
 
     @Override
@@ -52,6 +54,8 @@ public class Bot extends Thread {
 
     public void registerCommands(){
         this.commandManager.registerCommand(new CommandJudge(this.commandManager.getAccountManager()));
+        this.commandManager.registerCommand(new CommandEvaluate(this.commandManager.getAccountManager()));
+        this.commandManager.registerCommand(new CommandGet(this.commandManager.getAccountManager()));
     }
 
     private void connect(){

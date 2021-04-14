@@ -17,24 +17,33 @@ public class Analyze extends Thread {
     private final String userid;
     private double score;
     private AccountManager accountManager;
+    private final String message;
 
     public Analyze(Message input, AccountManager accountManager) {
         this.userid = input.getAuthor().getId();
-    this.start();
-    this.accountManager = accountManager;
+        this.message = input.getContentStripped();
+        this.start();
+        this.accountManager = accountManager;
     }
 
-    public void run(Message input, AccountManager accountManager) throws SQLException {
+    public Analyze(String input, String userid, AccountManager accountManager){
+        this.userid = userid;
+        this.message = input;
+        this.start();
+        this.accountManager = accountManager;
+    }
+
+    public void run(String message, String userid, AccountManager accountManager) {
         this.accountManager = accountManager;
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, parse, sentiment");
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-        Annotation annotation = pipeline.process(input.getContentStripped());
+        Annotation annotation = pipeline.process(message);
         for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
             Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
             score = RNNCoreAnnotations.getPredictedClass(tree);
         }
-        System.out.println("Rating: " + score + " | Message: " + input.getContentStripped());
+        System.out.println("Rating: " + score + " | Message: " + message);
         if(score == 0){
             score = 0.2;
         } if(score == 1){
@@ -46,7 +55,11 @@ public class Analyze extends Thread {
         } if(score == 4){
             score = -0.2;
         }
-        this.accountManager.updateJudgement(userid, score);
+        try {
+            this.accountManager.updateJudgement(userid, score);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         this.interrupt();
     }
 }
