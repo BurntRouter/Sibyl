@@ -1,9 +1,6 @@
 package com.sibyl.bot;
 
-import com.sibyl.bot.command.CommandEvaluate;
-import com.sibyl.bot.command.CommandGet;
-import com.sibyl.bot.command.CommandJudge;
-import com.sibyl.bot.command.CommandManager;
+import com.sibyl.bot.command.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -44,7 +41,7 @@ public class Bot extends Thread {
 
             System.out.println("Connecting to Discord...");
             this.connect();
-            System.out.println("Connected");
+            System.out.println("CONNECTED");
 
             System.out.println("Sibyl System Ready | Ping: " + this.api.getGatewayPing() + " | Casting Judgement on: " + this.api.getUsers().size() + " users");
         } catch(Exception e){
@@ -56,6 +53,7 @@ public class Bot extends Thread {
         this.commandManager.registerCommand(new CommandJudge(this.commandManager.getAccountManager()));
         this.commandManager.registerCommand(new CommandEvaluate(this.commandManager.getAccountManager()));
         this.commandManager.registerCommand(new CommandGet(this.commandManager.getAccountManager()));
+        this.commandManager.registerCommand(new CommandDebug());
     }
 
     private void connect(){

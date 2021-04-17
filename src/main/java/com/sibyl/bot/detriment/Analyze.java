@@ -13,27 +13,16 @@ import net.dv8tion.jda.api.entities.Message;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class Analyze extends Thread {
+public class Analyze {
     private final String userid;
     private double score;
     private AccountManager accountManager;
     private final String message;
 
-    public Analyze(Message input, AccountManager accountManager) {
-        this.userid = input.getAuthor().getId();
-        this.message = input.getContentStripped();
-        this.start();
-        this.accountManager = accountManager;
-    }
-
     public Analyze(String input, String userid, AccountManager accountManager){
         this.userid = userid;
         this.message = input;
-        this.start();
         this.accountManager = accountManager;
-    }
-
-    public void run(String message, String userid, AccountManager accountManager) {
         this.accountManager = accountManager;
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, parse, sentiment");
@@ -43,7 +32,6 @@ public class Analyze extends Thread {
             Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
             score = RNNCoreAnnotations.getPredictedClass(tree);
         }
-        System.out.println("Rating: " + score + " | Message: " + message);
         if(score == 0){
             score = 0.2;
         } if(score == 1){
@@ -60,6 +48,6 @@ public class Analyze extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        this.interrupt();
     }
+
 }

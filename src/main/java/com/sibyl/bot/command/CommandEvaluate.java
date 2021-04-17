@@ -17,7 +17,7 @@ public class CommandEvaluate extends Command{
     private String target;
 
     public CommandEvaluate(AccountManager accountManager) {
-        super(new String[] {"evaluate"}, new String[] {"target"}, "Evaluates all messages sent by the targeted user.");
+        super(new String[] {"evaluate"}, new String[] {"target"}, "Evaluates all messages sent by the targeted user.", true);
         this.accountManager = accountManager;
     }
 
@@ -45,6 +45,9 @@ public class CommandEvaluate extends Command{
                         query.getTextChannel().sendMessage("The target's detriment value has been reappraised.").queue();
                     } catch (Exception e3) {
                         query.getTextChannel().sendMessage("Could not find target. Please provide their userid or full Discord tag with discriminator").queue();
+                        e.printStackTrace();
+                        e2.printStackTrace();
+                        e3.printStackTrace();
                     }
                 }
             }
@@ -60,8 +63,6 @@ public class CommandEvaluate extends Command{
                 System.out.println("Analyzing " + messages.size() + " messages");
                 while (!messages.isEmpty()) {
                     Analyze analyze = new Analyze(messages.get(0), member.getId(), accountManager);
-                    System.out.println("Analyzing message from " + member.getId());
-                    analyze.run();
                     messages.remove(0);
                 }
             }

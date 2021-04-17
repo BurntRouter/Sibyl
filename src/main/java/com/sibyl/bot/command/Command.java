@@ -12,6 +12,8 @@ public abstract class Command {
 
     private String description;
 
+    private boolean needsCouncil;
+
     private boolean requiresWritePermission = true;
 
     public String[] getIdentifiers() {
@@ -22,6 +24,13 @@ public abstract class Command {
         this.identifiers = identifiers;
         this.arguments = arguments;
         this.description = description;
+    }
+
+    public Command(String[] identifiers, String [] arguments, String description, Boolean needsCouncil){
+        this.identifiers = identifiers;
+        this.arguments = arguments;
+        this.description = description;
+        this.needsCouncil = needsCouncil;
     }
 
     public boolean identifierMatches(String identifier) {
@@ -57,6 +66,10 @@ public abstract class Command {
 
     public boolean hasArguments() {
         return this.getArguments().length > 0;
+    }
+
+    public boolean needsCouncil() {
+        return this.needsCouncil;
     }
 
 }

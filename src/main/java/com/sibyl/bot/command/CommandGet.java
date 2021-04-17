@@ -10,7 +10,7 @@ public class CommandGet extends Command{
     private AccountManager accountManager;
 
     public CommandGet(AccountManager accountManager) {
-        super(new String[] {"get"}, new String[] {"#channel"}, "Gets all messages in a channel.");
+        super(new String[] {"get"}, new String[] {"#channel"}, "Gets all messages in a channel.", true);
         this.accountManager = accountManager;
     }
 

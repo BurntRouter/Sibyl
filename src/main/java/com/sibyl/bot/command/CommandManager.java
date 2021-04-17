@@ -49,19 +49,22 @@ public class CommandManager extends ListenerAdapter {
                     if(event.getMessage().getContentStripped().length() > 0) {
                         if(!event.getMessage().getAuthor().isBot()) {
                             if(event.getMessage().getContentStripped().toLowerCase().startsWith("sibyl, ")){
-                                System.out.println("Precommand!");
                                 for(Command command : getCommands()){
                                     String queryIdentifier = fullQuery.get(0);
                                     if(command.identifierMatches(queryIdentifier)){
-                                        System.out.println("Got a command!");
-                                        command.onUse(query, fullQuery, CommandManager.this);
+                                        if(!command.needsCouncil()){
+                                            command.onUse(query, fullQuery, CommandManager.this);
+                                        } else if(command.needsCouncil() && accountManager.isCouncil(query.getAuthor().getId())){
+                                            command.onUse(query, fullQuery, CommandManager.this);
+                                        }
                                     }
                                 }
                             } else {
                                 if(!event.getMessage().getContentStripped().isEmpty()){
-                                    Analyze analyze = new Analyze(event.getMessage(), accountManager);
-                                    analyze.run(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
+                                    Analyze analyze = new Analyze(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
                                     accountManager.logMessage(event.getMessage());
+                                    accountManager.updateName(event.getAuthor().getId(), event.getAuthor().getName());
+                                    accountManager.updateAvatar(event.getAuthor().getId(), event.getAuthor().getEffectiveAvatarUrl());
                                 }
                             }
                         }
