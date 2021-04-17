@@ -32,8 +32,10 @@ public class CommandJudge extends Command{
                 query.getTextChannel().sendMessage("You've used this command incorrectly. Please specify either a userid to judge somebody else or nothing to judge yourself.").queue();
             }
 
-        } else {
+        } else if(arguments.size() == 1) {
             userid = query.getAuthor().getId();
+        } else {
+            query.getTextChannel().sendMessage("You've used this command incorrectly. Please specify either a userid to judge somebody else or nothing to judge yourself.").queue();
         }
         double score;
         score = accountManager.getJudgement(userid);
