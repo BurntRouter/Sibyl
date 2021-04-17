@@ -38,36 +38,41 @@ public class CommandManager extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        try {
-            query = event.getMessage();
-            String content = (query.getContentRaw().toLowerCase());
-            content = content.replaceFirst("sibyl, ", "");
-            List<String> fullQuery = (Arrays.asList(content.split(" ")));
+        Thread thread = new Thread(){
+            public void run(){
+                try {
+                    query = event.getMessage();
+                    String content = (query.getContentRaw().toLowerCase());
+                    content = content.replaceFirst("sibyl, ", "");
+                    List<String> fullQuery = (Arrays.asList(content.split(" ")));
 
-            if(event.getMessage().getContentStripped().length() > 0) {
-                if(!event.getMessage().getAuthor().isBot()) {
-                    if(event.getMessage().getContentStripped().toLowerCase().startsWith("sibyl, ")){
-                        System.out.println("Precommand!");
-                        for(Command command : this.getCommands()){
-                            String queryIdentifier = fullQuery.get(0);
-                            if(command.identifierMatches(queryIdentifier)){
-                                System.out.println("Got a command!");
-                                command.onUse(query, fullQuery, this);
+                    if(event.getMessage().getContentStripped().length() > 0) {
+                        if(!event.getMessage().getAuthor().isBot()) {
+                            if(event.getMessage().getContentStripped().toLowerCase().startsWith("sibyl, ")){
+                                System.out.println("Precommand!");
+                                for(Command command : getCommands()){
+                                    String queryIdentifier = fullQuery.get(0);
+                                    if(command.identifierMatches(queryIdentifier)){
+                                        System.out.println("Got a command!");
+                                        command.onUse(query, fullQuery, CommandManager.this);
+                                    }
+                                }
+                            } else {
+                                if(!event.getMessage().getContentStripped().isEmpty()){
+                                    Analyze analyze = new Analyze(event.getMessage(), accountManager);
+                                    analyze.run(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
+                                    accountManager.logMessage(event.getMessage());
+                                }
                             }
                         }
-                    } else {
-                        if(!event.getMessage().getContentStripped().isEmpty()){
-                            Analyze analyze = new Analyze(event.getMessage(), accountManager);
-                            analyze.run(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
-                            this.accountManager.logMessage(event.getMessage());
-                        }
                     }
+                } catch(Exception uncaughtMessageException) {
+                    System.err.println("Exception from message event");
+                    uncaughtMessageException.printStackTrace();
                 }
             }
-        } catch(Exception uncaughtMessageException) {
-            System.err.println("Exception from message event");
-            uncaughtMessageException.printStackTrace();
-        }
+        };
+        thread.start();
     }
 
     public void registerCommand(Command command){

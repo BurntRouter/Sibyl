@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class AccountManager {
     private MySQL mysql;
@@ -63,6 +62,8 @@ public class AccountManager {
         while(results.next()){
             uuid = results.getString("userid");
         }
+        results.close();
+        getJudgement.close();
         return uuid;
     }
 
@@ -80,7 +81,7 @@ public class AccountManager {
         checkRig.close();
         if(rig == 1){
             rigged = true;
-        } else  {
+        } else {
             rigged = false;
         }
         return rigged;
