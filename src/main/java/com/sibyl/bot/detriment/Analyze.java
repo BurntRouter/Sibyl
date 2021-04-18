@@ -30,8 +30,12 @@ public class Analyze {
         Annotation annotation = pipeline.process(message);
         for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
             Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
+            tree = null;
             score = RNNCoreAnnotations.getPredictedClass(tree);
         }
+        props.clear();
+        pipeline = null;
+        annotation = null;
         if(score == 0){
             score = 0.2;
         } if(score == 1){

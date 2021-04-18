@@ -99,6 +99,8 @@ public class CommandJudge extends Command{
             }
             embed.addField("Detriment Coefficient: ", String.valueOf(score), true);
             query.getTextChannel().sendMessage(embed.build()).queue();
+            name=null;
+            avatar=null;
         } catch(Exception e) {
             query.getTextChannel().sendMessage("You've used this command incorrectly or the target user does not exist. Please specify either a userid to judge somebody else or nothing to judge yourself.").queue();
         }
