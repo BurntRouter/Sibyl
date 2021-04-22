@@ -1,11 +1,13 @@
 package com.sibyl.bot.database;
 
+import com.sibyl.bot.command.CommandEvaluate;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class AccountManager {
     private MySQL mysql;
@@ -83,17 +85,22 @@ public class AccountManager {
     }
 
     public ArrayList<String> getMessages(String userid) throws SQLException {
-        ArrayList<String> messages = new ArrayList<>();
+        try{
+            ArrayList<String> messages = new ArrayList<>();
 
-        PreparedStatement getMess = this.mysql.getStatement("SELECT content FROM messages WHERE userid = ?");
-        getMess.setString(1, userid);
-        ResultSet resultSet = getMess.executeQuery();
-        while(resultSet.next()){
-            messages.add(resultSet.getString("content"));
+            PreparedStatement getMess = this.mysql.getStatement("SELECT content FROM messages WHERE userid = ?");
+            getMess.setString(1, userid);
+            ResultSet resultSet = getMess.executeQuery();
+            while(resultSet.next()){
+                messages.add(resultSet.getString("content"));
+            }
+            resultSet.close();
+            getMess.close();
+            return messages;
+        } catch(Exception e){
+            return null;
         }
-        resultSet.close();
-        getMess.close();
-        return messages;
+
     }
 
     public void updateName(String userid, String name) throws SQLException {
