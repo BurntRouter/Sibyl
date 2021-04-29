@@ -1,0 +1,15 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "10:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: net.dv8tion:JDA
+    versions:
+    - 4.2.1_255
+    - 4.2.1_256
+    - 4.2.1_259
+    - 4.2.1_261
