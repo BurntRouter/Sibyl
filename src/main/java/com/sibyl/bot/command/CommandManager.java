@@ -61,7 +61,7 @@ public class CommandManager extends ListenerAdapter {
                                 }
                             } else {
                                 if(!event.getMessage().getContentStripped().isEmpty()){
-                                    Analyze analyze = new Analyze(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
+                                    new Analyze(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
                                     accountManager.logMessage(event.getMessage());
                                     accountManager.updateName(event.getAuthor().getId(), event.getAuthor().getName());
                                     accountManager.updateAvatar(event.getAuthor().getId(), event.getAuthor().getEffectiveAvatarUrl());

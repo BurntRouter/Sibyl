@@ -17,9 +17,9 @@ public class Analyze {
     private double score;
     private AccountManager accountManager;
 
+    //Take a message from a specific user, judge it using Stanford NLP, then provide it a score and update their score.
     public Analyze(String input, String userid, AccountManager accountManager){
         try{
-            this.accountManager = accountManager;
             this.accountManager = accountManager;
             Properties props = new Properties();
             props.setProperty("annotators", "tokenize, ssplit, pos, parse, sentiment");
@@ -33,7 +33,7 @@ public class Analyze {
         } catch(Exception e) {
             e.printStackTrace();
         }
-
+        //Invert results to lower a score if the message is positive or raise if the message is negative.
         if(score == 0){
             score = 0.2;
             System.out.println("Rating: " + score + " | Content: " + input);
