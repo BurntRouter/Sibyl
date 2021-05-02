@@ -8,7 +8,7 @@ import java.awt.*;
 import java.util.List;
 
 public class CommandJudge extends Command{
-    private AccountManager accountManager;
+    private final AccountManager accountManager;
     private String userid;
     private String name;
     private String avatar;

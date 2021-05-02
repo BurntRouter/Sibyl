@@ -9,8 +9,8 @@ import java.nio.charset.Charset;
 
 public class Authenticator {
 
-    private JSONObject configJson;
-    private JSONObject credentialsJson;
+    private final JSONObject configJson;
+    private final JSONObject credentialsJson;
 
     private final String CONFIG_PATH = ("./config.json");
 

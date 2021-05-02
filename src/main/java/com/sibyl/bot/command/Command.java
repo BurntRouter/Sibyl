@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Message;
 
 public abstract class Command {
 
-    private String[] identifiers;
+    private final String[] identifiers;
 
-    private String[] arguments;
+    private final String[] arguments;
 
     private String description;
 

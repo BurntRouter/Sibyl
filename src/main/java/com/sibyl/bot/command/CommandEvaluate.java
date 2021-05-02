@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandEvaluate extends Command{
-    private AccountManager accountManager;
+    private final AccountManager accountManager;
     private Guild guild;
     private Member member;
     private String target;

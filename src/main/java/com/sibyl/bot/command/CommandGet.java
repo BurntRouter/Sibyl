@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.MessageHistory;
 import java.util.*;
 
 public class CommandGet extends Command{
-    private AccountManager accountManager;
+    private final AccountManager accountManager;
 
     public CommandGet(AccountManager accountManager) {
         super(new String[] {"get"}, new String[] {"#channel"}, "Gets all messages in a channel.", true);

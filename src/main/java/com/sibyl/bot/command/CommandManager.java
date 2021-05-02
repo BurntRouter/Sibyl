@@ -20,9 +20,9 @@ public class CommandManager extends ListenerAdapter {
     private Message query;
     private List<String> fullQuery;
     public String prefix = "Sibyl, ";
-    private List<Command> commands;
+    private final List<Command> commands;
     private AccountManager accountManager;
-    private JDA api;
+    private final JDA api;
 
     public CommandManager(JDA api) throws SQLException, IOException, ClassNotFoundException {
         this.commands = new ArrayList<>();
