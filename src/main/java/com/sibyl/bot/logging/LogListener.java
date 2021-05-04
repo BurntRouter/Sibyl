@@ -4,15 +4,18 @@ import com.sibyl.bot.database.AccountManager;
 import com.sibyl.bot.detriment.Analyze;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteCreateEvent;
 import net.dv8tion.jda.api.events.guild.invite.GuildInviteDeleteEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 public class LogListener extends ListenerAdapter {
     private final JDA api;
@@ -39,21 +42,44 @@ public class LogListener extends ListenerAdapter {
             }
         });
     }
+
     //When a user joins a guild it will build and send an embed with some extra information.
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event){
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle(event.getMember().getAsMention());
-        embedBuilder.setImage(event.getUser().getEffectiveAvatarUrl());
-        embedBuilder.setDescription("Created: " + event.getUser().getTimeCreated().toString());
-        System.out.println(event.toString());
+        try {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setThumbnail(event.getMember().getUser().getEffectiveAvatarUrl());
+            embedBuilder.setTitle(event.getMember().getEffectiveName() + " joined");
+            embedBuilder.addField("**Created:** ", event.getUser().getTimeCreated().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm")), false);
+            embedBuilder.addField("**Members:** ", String.valueOf(event.getGuild().getMemberCount()), false);
+            embedBuilder.addField("**Date:** ", getDate(), false);
+            embedBuilder.addField("**ID:** ", "`" + event.getMember().getId() + "`", false);
+            event.getGuild().getTextChannelById(this.accountManager.getLogging(event.getGuild().getId())).sendMessage(embedBuilder.build()).queue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    //When a user leaves a guild it will build and send an embed with some extra information.
+    @Override
+    public void onGuildMemberRemove(GuildMemberRemoveEvent event){
+        try {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setThumbnail(event.getMember().getUser().getEffectiveAvatarUrl());
+            embedBuilder.setTitle(event.getMember().getEffectiveName() + " left");
+            embedBuilder.addField("**Members:** ", String.valueOf(event.getGuild().getMemberCount()), false);
+            embedBuilder.addField("**Date:** ", getDate(), false);
+            embedBuilder.addField("**ID:** ", "`" + event.getMember().getId() + "`", false);
+            event.getGuild().getTextChannelById(this.accountManager.getLogging(event.getGuild().getId())).sendMessage(embedBuilder.build()).queue();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     //Logs invite info when created
     @Override
     public void onGuildInviteCreate(GuildInviteCreateEvent event){
+        System.out.println("Found a new invite!");
         try {
-            System.out.println("Found a new invite!");
             this.accountManager.addInvite(event.getCode(), event.getInvite().getInviter().getId());
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle(event.getInvite().getInviter().getName() + " created an invite");
@@ -69,5 +95,12 @@ public class LogListener extends ListenerAdapter {
     @Override
     public void onGuildInviteDelete(GuildInviteDeleteEvent event){
 
+    }
+
+    public String getDate() {
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+        String strDate = dateFormat.format(date) + " EST";
+        return strDate;
     }
 }

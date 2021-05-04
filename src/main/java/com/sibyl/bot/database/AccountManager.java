@@ -181,7 +181,7 @@ public class AccountManager {
     //This is used to get the channel all logging information should be sent to
     public String getLogging(String guildid) throws SQLException {
         String logging = null;
-        PreparedStatement getLogging = this.mysql.getStatement("SELECT loggingChannel WHERE guildid = ?");
+        PreparedStatement getLogging = this.mysql.getStatement("SELECT loggingChannel FROM guild WHERE guildid = ? ");
         getLogging.setString(1, guildid);
         ResultSet resultSet = getLogging.executeQuery();
         while(resultSet.next()) {

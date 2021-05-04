@@ -24,10 +24,8 @@ public class UserLookup {
             System.out.println(arg);
             if(arg.contains("#")) {
                 member = guild.getMemberByTag(arg);
-                System.out.println("Got " + member.getNickname() + " from tag");
             } else if(arg.matches("[0-9]+")) {
                 member = guild.getMemberById(arg);
-                System.out.println("Got " + member.getNickname() + " from userid");
             } else {
                 member = null;
             }
