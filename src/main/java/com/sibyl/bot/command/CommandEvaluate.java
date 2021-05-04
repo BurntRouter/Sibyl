@@ -3,7 +3,6 @@ package com.sibyl.bot.command;
 import com.sibyl.bot.database.AccountManager;
 import com.sibyl.bot.detriment.Analyze;
 import com.sibyl.bot.util.UserLookup;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 

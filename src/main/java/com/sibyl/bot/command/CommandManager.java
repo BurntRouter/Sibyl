@@ -21,60 +21,45 @@ public class CommandManager extends ListenerAdapter {
     private List<String> fullQuery;
     public String prefix = "Sibyl, ";
     private final List<Command> commands;
-    private AccountManager accountManager;
     private final JDA api;
+    private final AccountManager accountManager;
 
-    public CommandManager(JDA api) throws SQLException, IOException, ClassNotFoundException {
+    public CommandManager(JDA api, AccountManager accountManager) throws SQLException, IOException, ClassNotFoundException {
         this.commands = new ArrayList<>();
-
-        Authenticator authenticator = new Authenticator();
-
-        MySQL database = new MySQL("com.mysql.cj.jdbc.Driver", "jdbc:mysql://" + authenticator.getDatabaseHost() + "/" + authenticator.getDatabaseName() + "?autoReconnect=true&user=" + authenticator.getDatabaseUser() + "&password=" + authenticator.getDatabasePassword());
-
-        this.setAccountManager(new AccountManager(database));
-
         this.api = api;
+        this.accountManager = accountManager;
     }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        Thread thread = new Thread(){
-            public void run(){
-                try {
-                    query = event.getMessage();
-                    String content = (query.getContentRaw().toLowerCase());
-                    content = content.replaceFirst("sibyl, ", "");
-                    List<String> fullQuery = (Arrays.asList(content.split(" ")));
+        Thread thread = new Thread(() -> {
+            try {
+                query = event.getMessage();
+                String content = (query.getContentRaw().toLowerCase());
+                content = content.replaceFirst("sibyl, ", "");
+                List<String> fullQuery = (Arrays.asList(content.split(" ")));
 
-                    if(event.getMessage().getContentStripped().length() > 0) {
-                        if(!event.getMessage().getAuthor().isBot()) {
-                            if(event.getMessage().getContentStripped().toLowerCase().startsWith("sibyl, ")){
-                                for(Command command : getCommands()){
-                                    String queryIdentifier = fullQuery.get(0);
-                                    if(command.identifierMatches(queryIdentifier)){
-                                        if(!command.needsCouncil()){
-                                            command.onUse(query, fullQuery, CommandManager.this);
-                                        } else if(command.needsCouncil() && accountManager.isCouncil(query.getAuthor().getId())){
-                                            command.onUse(query, fullQuery, CommandManager.this);
-                                        }
+                if(event.getMessage().getContentStripped().length() > 0) {
+                    if(!event.getMessage().getAuthor().isBot()) {
+                        if(event.getMessage().getContentStripped().toLowerCase().startsWith("sibyl, ")){
+                            for(Command command : getCommands()){
+                                String queryIdentifier = fullQuery.get(0);
+                                if(command.identifierMatches(queryIdentifier)){
+                                    if(!command.needsCouncil()){
+                                        command.onUse(query, fullQuery, CommandManager.this);
+                                    } else if(command.needsCouncil() && accountManager.isCouncil(query.getAuthor().getId())){
+                                        command.onUse(query, fullQuery, CommandManager.this);
                                     }
-                                }
-                            } else {
-                                if(!event.getMessage().getContentStripped().isEmpty()){
-                                    new Analyze(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
-                                    accountManager.logMessage(event.getMessage());
-                                    accountManager.updateName(event.getAuthor().getId(), event.getAuthor().getName());
-                                    accountManager.updateAvatar(event.getAuthor().getId(), event.getAuthor().getEffectiveAvatarUrl());
                                 }
                             }
                         }
                     }
-                } catch(Exception uncaughtMessageException) {
-                    System.err.println("Exception from message event");
-                    uncaughtMessageException.printStackTrace();
                 }
+            } catch(Exception uncaughtMessageException) {
+                System.err.println("Exception from message event");
+                uncaughtMessageException.printStackTrace();
             }
-        };
+        });
         thread.start();
     }
 
@@ -84,13 +69,5 @@ public class CommandManager extends ListenerAdapter {
 
     public List<Command> getCommands(){
         return this.commands;
-    }
-
-    public AccountManager getAccountManager() {
-        return accountManager;
-    }
-
-    public void setAccountManager(AccountManager accountManager) {
-        this.accountManager = accountManager;
     }
 }

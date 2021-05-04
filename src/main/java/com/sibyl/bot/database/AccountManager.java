@@ -2,6 +2,7 @@ package com.sibyl.bot.database;
 
 import com.sibyl.bot.command.CommandEvaluate;
 import net.dv8tion.jda.api.entities.Message;
+import nu.xom.jaxen.expr.AdditiveExpr;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -73,6 +74,7 @@ public class AccountManager {
         return uuid;
     }
 
+    //Gets
     public void logMessage(Message message) throws SQLException {
         PreparedStatement logMess = this.mysql.getStatement("INSERT IGNORE INTO messages (guildid, channelid, userid, messageid, content) VALUES (?, ?, ?, ?, ?)");
         logMess.setString(1, message.getGuild().getId());
@@ -84,6 +86,7 @@ public class AccountManager {
         logMess.close();
     }
 
+    //Gets all messages ever sent from a user
     public ArrayList<String> getMessages(String userid) throws SQLException {
         try{
             ArrayList<String> messages = new ArrayList<>();
@@ -103,6 +106,7 @@ public class AccountManager {
 
     }
 
+    //Caches a user's name
     public void updateName(String userid, String name) throws SQLException {
         PreparedStatement setName = this.mysql.getStatement("UPDATE users SET name = ? WHERE userid = ?");
         setName.setString(1, name);
@@ -111,6 +115,7 @@ public class AccountManager {
         setName.close();
     }
 
+    //Caches a user's avatar
     public void updateAvatar(String userid, String url) throws SQLException {
         PreparedStatement setName = this.mysql.getStatement("UPDATE users SET avatar = ? WHERE userid = ?");
         setName.setString(1, url);
@@ -119,6 +124,7 @@ public class AccountManager {
         setName.close();
     }
 
+    //Gets a user's cached name
     public String getName(String userid) throws SQLException {
         String name = null;
         PreparedStatement getName = this.mysql.getStatement("SELECT name FROM users WHERE userid = ?");
@@ -133,6 +139,7 @@ public class AccountManager {
         return name;
     }
 
+    //Gets a user's cached avatar
     public String getAvatar(String userid) throws SQLException {
         String avatar = null;
         PreparedStatement getName = this.mysql.getStatement("SELECT avatar FROM users WHERE userid = ?");
@@ -147,6 +154,7 @@ public class AccountManager {
         return avatar;
     }
 
+    //Checks if a user is on the secret council that runs all of Discord ;)
     public boolean isCouncil(String userid) throws SQLException {
         boolean isCouncil = false;
 
@@ -159,6 +167,29 @@ public class AccountManager {
         resultSet.close();
         checkCouncil.close();
         return isCouncil;
+    }
+
+    //When an Invite is created this will log it to the database (probably)
+    public void addInvite(String code, String creator) throws SQLException {
+        PreparedStatement addInvite = this.mysql.getStatement("INSERT INTO invites (inviteCode, createdBy) VALUES (?, ?)");
+        addInvite.setString(1, code);
+        addInvite.setString(2, creator);
+        addInvite.executeUpdate();
+        addInvite.close();
+    }
+
+    //This is used to get the channel all logging information should be sent to
+    public String getLogging(String guildid) throws SQLException {
+        String logging = null;
+        PreparedStatement getLogging = this.mysql.getStatement("SELECT loggingChannel WHERE guildid = ?");
+        getLogging.setString(1, guildid);
+        ResultSet resultSet = getLogging.executeQuery();
+        while(resultSet.next()) {
+            logging = resultSet.getString("loggingChannel");
+        }
+        resultSet.close();
+        getLogging.close();
+        return logging;
     }
 
     public MySQL getMysql() {
