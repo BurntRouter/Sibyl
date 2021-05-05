@@ -40,7 +40,7 @@ public class LogListener extends ListenerAdapter {
                 }
             } catch(Exception e) {
             }
-        });
+        }).run();
     }
 
     //When a user joins a guild it will build and send an embed with some extra information.

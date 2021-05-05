@@ -1,14 +1,11 @@
 package com.sibyl.bot.database;
 
-import com.sibyl.bot.command.CommandEvaluate;
 import net.dv8tion.jda.api.entities.Message;
-import nu.xom.jaxen.expr.AdditiveExpr;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class AccountManager {
     private MySQL mysql;
@@ -190,6 +187,33 @@ public class AccountManager {
         resultSet.close();
         getLogging.close();
         return logging;
+    }
+
+    //Gets the trusted role for community based moderation actions
+    public String getTrusted(String guildid) throws SQLException {
+        String trusted = null;
+        PreparedStatement getTrusted = this.mysql.getStatement("SELECT trustedRole FROM guild WHERE guildid = ?");
+        getTrusted.setString(1, guildid);
+        ResultSet resultSet = getTrusted.executeQuery();
+        while(resultSet.next()){
+            trusted = resultSet.getString("trustedRole");
+        }
+        resultSet.close();
+        getTrusted.close();
+        return trusted;
+    }
+
+    public String getMuteRole(String guildid) throws SQLException {
+        String muteRoleID = null;
+        PreparedStatement getMuteRole = this.mysql.getStatement("SELECT mutedRole FROM guild WHERE guildid = ?");
+        getMuteRole.setString(1, guildid);
+        ResultSet resultSet = getMuteRole.executeQuery();
+        while(resultSet.next()) {
+            muteRoleID = resultSet.getString("mutedRole");
+        }
+        resultSet.close();
+        getMuteRole.close();
+        return muteRoleID;
     }
 
     public MySQL getMysql() {
