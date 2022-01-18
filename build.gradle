@@ -21,7 +21,7 @@ repositories {
 dependencies {
     compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '4.3.2'
     compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '4.3.2', classifier: 'models'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
     compile group: 'commons-io', name: 'commons-io', version: '2.11.0'
     compile group: 'org.json', name: 'json', version: '20210307'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
