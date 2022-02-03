@@ -1,9 +1,6 @@
 package com.sibyl.bot.command;
 
-import com.sibyl.bot.Authenticator;
 import com.sibyl.bot.database.AccountManager;
-import com.sibyl.bot.database.MySQL;
-import com.sibyl.bot.detriment.Analyze;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -42,6 +39,7 @@ public class CommandManager extends ListenerAdapter {
                 if(event.getMessage().getContentStripped().length() > 0) {
                     if(!event.getMessage().getAuthor().isBot()) {
                         if(event.getMessage().getContentStripped().toLowerCase().startsWith("sibyl, ")){
+                            System.out.println("Got command");
                             for(Command command : getCommands()){
                                 String queryIdentifier = fullQuery.get(0);
                                 if(command.identifierMatches(queryIdentifier)){

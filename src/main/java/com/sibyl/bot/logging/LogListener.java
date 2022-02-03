@@ -32,7 +32,7 @@ public class LogListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent event){
         new Thread(() -> {
             try{
-                if(!event.getMessage().getContentStripped().isEmpty()) {
+                if(!event.getMessage().getContentStripped().isEmpty() && !event.getAuthor().isBot()) {
                     new Analyze(event.getMessage().getContentStripped(), event.getAuthor().getId(), accountManager);
                     accountManager.logMessage(event.getMessage());
                     accountManager.updateName(event.getAuthor().getId(), event.getAuthor().getName());

@@ -7,7 +7,6 @@ import com.sibyl.bot.logging.LogListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -23,7 +22,7 @@ public class Bot extends Thread {
     private LogListener logListener;
     private AccountManager accountManager;
 
-    public Bot(String token) throws LoginException, IllegalAccessException, InterruptedException, RateLimitedException {
+    public Bot(String token) throws LoginException, InterruptedException {
         this.token = token;
 
         this.setup();
@@ -32,7 +31,7 @@ public class Bot extends Thread {
 
     public void setup() throws LoginException, InterruptedException {
         System.out.println("Sibyl System is Warming Up");
-        this.api = JDABuilder.createDefault(token).setChunkingFilter(ChunkingFilter.ALL).setActivity(Activity.watching("you")).enableCache(CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES).setEnabledIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES).build().awaitReady();
+        this.api = JDABuilder.createDefault(token).setChunkingFilter(ChunkingFilter.ALL).setActivity(Activity.watching("you")).enableCache(CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.ACTIVITY).setEnabledIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES).build().awaitReady();
     }
 
     @Override

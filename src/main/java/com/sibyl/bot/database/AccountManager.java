@@ -161,6 +161,7 @@ public class AccountManager {
         while(resultSet.next()) {
            isCouncil = resultSet.getBoolean("isCouncil");
         }
+        System.out.println(userid + "council = " + isCouncil);
         resultSet.close();
         checkCouncil.close();
         return isCouncil;
@@ -214,6 +215,19 @@ public class AccountManager {
         resultSet.close();
         getMuteRole.close();
         return muteRoleID;
+    }
+
+    public String getModChannel(String guildid) throws SQLException {
+        String modChannelId = null;
+        PreparedStatement getModChannel = this.mysql.getStatement("SELECT modLoggingChannel FROM guild WHERE guildid = ?");
+        getModChannel.setString(1, guildid);
+        ResultSet resultSet = getModChannel.executeQuery();
+        while(resultSet.next()) {
+            modChannelId = resultSet.getString("modLoggingChannel");
+        }
+        resultSet.close();
+        getModChannel.close();
+        return modChannelId;
     }
 
     public MySQL getMysql() {

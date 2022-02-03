@@ -12,7 +12,6 @@ import java.util.List;
 
 public class CommandEvaluate extends Command{
     private final AccountManager accountManager;
-    private Member member;
 
     public CommandEvaluate(AccountManager accountManager) {
         super(new String[] {"evaluate"}, new String[] {"target"}, "Evaluates all messages sent by the targeted user.", true);
@@ -20,9 +19,9 @@ public class CommandEvaluate extends Command{
     }
 
     @Override
-    public void onUse(Message query, List<String> arguments, CommandManager commandManager) throws Exception {
+    public void onUse(Message query, List<String> arguments, CommandManager commandManager) {
         try {
-            member = UserLookup.getMember(query);
+            Member member = UserLookup.getMember(query);
             Evaluate evaluate = new Evaluate();
             evaluate.run(member, accountManager);
         } catch (Exception e) {
@@ -30,9 +29,9 @@ public class CommandEvaluate extends Command{
         }
     }
 
-    public class Evaluate extends Thread{
+    public static class Evaluate extends Thread{
         public void run(Member member, AccountManager accountManager) throws SQLException {
-                ArrayList<String> messages = new ArrayList<>();
+                ArrayList<String> messages;
                 messages = accountManager.getMessages(member.getId());
                 System.out.println("Analyzing " + messages.size() + " messages");
                 while (!messages.isEmpty()) {

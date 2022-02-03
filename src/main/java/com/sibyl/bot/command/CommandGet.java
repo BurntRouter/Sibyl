@@ -4,7 +4,8 @@ import com.sibyl.bot.database.AccountManager;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandGet extends Command{
     private final AccountManager accountManager;
@@ -16,8 +17,9 @@ public class CommandGet extends Command{
 
     @Override
     public void onUse(Message query, List<String> arguments, CommandManager commandManager) throws Exception {
+        System.out.println("EXECUTING COMMAND");
         query.getTextChannel().sendMessage("Getting all messages in this channel. Please be patient.").queue();
-        ArrayList<Message> result = new ArrayList<>();
+        ArrayList<Message> result;
         result = new ArrayList<>(getMessages(query).getRetrievedHistory());
         System.out.println(result.size() + " is the array size.");
         while(!result.isEmpty()){
@@ -28,7 +30,6 @@ public class CommandGet extends Command{
     }
 
     public static MessageHistory getMessages(Message query){
-        MessageHistory history = MessageHistory.getHistoryFromBeginning(query.getTextChannel()).complete();
-        return history;
+        return MessageHistory.getHistoryBefore(query.getMentionedChannels().get(0), query.getMentionedChannels().get(0).getLatestMessageId()).complete();
     }
 }
